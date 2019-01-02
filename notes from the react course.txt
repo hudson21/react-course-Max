@@ -1,0 +1,227 @@
+What is React ?
+R/ A JavaScript Library for building User Interfaces
+
+------------------create react app----------------------
+
+npm install -g create-react-app
+
+
+========================= Styling React Components ====================================
+
+let classes = ['red', 'bold'].join(' '); // read bold
+
+Library to use animations in React:
+    + npm install --save radium //It allows us to use inline-styles in React
+
+Video 066 --> Enabling Using CSS Modules
+
+To enable CSS modules: + npm run eject
+                       + now you can see the folders of scripts and config
+                       + config/ webpack.config.dev and webpack.config.prod --> test: /\.css$/,
+                       + importLoaders: 1,
+                         modules: true,
+                         localIdentName:'[name]__[local]__[hash:base64:5]'
+                       + 
+
+========================= Debugging React Apps =======================================
++ Google "React Developer Tools"
++ Only use ErrorBoundaries when you are aware that it is not easy to control an error
+
+========================= Component Deep Dive ========================================
++ Component Lifecycle - Update (triggered by Parent)
+    - componentWillReceiveProps(nextProps)
+    - shouldComponentUpdate(nextProps,nextState) --> you can return here true or false
+    - componentWillUpdate(nextProps,nextState)
+
++ Component lifecycle - Update (triggered by Internal Change)
+    - shouldComponentUpdate
+    - componentWillUpdate
+
++ PureComponent only renders if the current props are different from the old ones
+
++ How React Updates the DOM ?
+    It compares the old virtual DOM with the Re-rendered Virtual DOM and
+    decides if it rerenders the Real DOM
+
++ Best Practice of mutating state: 
+    this.setState((prevState, props) =>{
+        return{
+            showPersons: !doesShow,
+            toggleClicked: prevState.toggleClicked + 1
+        }
+    })
+
+------------------Validating Props------------------
++ npm install --save prop-types
+
+Types or propTypes:
+
+  optionalArray: PropTypes.array,
+  optionalBool: PropTypes.bool,
+  optionalFunc: PropTypes.func,
+  optionalNumber: PropTypes.number,
+  optionalObject: PropTypes.object,
+  optionalString: PropTypes.string,
+  optionalSymbol: PropTypes.symbol,
+
+------------------ Using References ------------------
++ They can only be used in stateful components
+
+constructor(props){
+    super(props);
+    this.inputElement = React.createRef();
+}
+
+<input 
+    ref={this.inputElement}
+    type="text"
+    onChange={this.props.changed}
+    value={this.props.name}
+/>
+
+------------------- The Context API ------------------
+
+
+-------------------new Lifecycle methods -------------
+//This lifecylce is executed when your props are updated and it gives you the chance to update the state
+  among them 
+getDerivedStateFromProps(nextProps, prevState){
+    console.log('Update App.js Inside getDerivedStateFromProps', nextProps, prevState);
+    return prevState;
+}
+
+getSnapshotBeforeUpdate(){
+
+}
+
+
+-------------------- 08 A Real App The Burger Builder (Basic Version) --------------------
+
+-------------------- Planning a React App -----------
+1. Component Tree/Component Structure
+2. Application State (Data)
+3. Component vs Containers
+
+
+111. Setting up the Project 
+
+To use modules, you just need to add [name of the file].module.css
+
++ npm install --save prop-types
++ Check the React documentation (reduce method)
+
+133. Adding Reusable Navigation Items 
+
+==================================== Htpp / Ajax ========================================
++ npm install --save axios
+
++ How to add interceptors in your React Application
+    - index.js
+
+    axios.interceptors.request.use(request => {
+    console.log(request);
+    //Edit request config
+    return request;
+    }, error => {
+        console.log(error);
+        return Promise.reject(error);
+    });
+
+    axios.interceptors.response.use(response => {
+        console.log(response);
+        //Edit request config
+        return response;
+    }, error => {
+        console.log(error);
+        return Promise.reject(error);
+    });
+
++ How to remove interceptors
+
+You learned how to add an interceptor, getting rid of one is also easy.
+Simply store the reference to the interceptor in a variable and call eject 
+with that reference as an argument, 
+to remove it (more info: https://github.com/axios/axios#interceptors):
+
+var myInterceptor = axios.interceptors.request.use(function () {/*...*/});
+axios.interceptors.request.eject(myInterceptor);
+
++ Set a base URL in axios
+axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com';
+
++ set default headers
+axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
+
+-------------Create based URLs in axios por certain parts of you app----------
++ Axios Docs: https://github.com/axios/axios
+
++ https://projects.lukehaas.me/css-loaders/
+
+176. Setting Up Links 02:48
+
++ npm install --save react-router react-router-dom
+
++ import { withRouter } from 'react-router-dom';
++ export default withRouter(post);
+
+189. Passing Route Parameters 02:33
+
+this.props.match.params.id 
+this.props.history.push or replace are two ways of redirecting to another view
+this.props.match.url
+
+
+- Convert a string to a number
+    +this.props.match.params.id
+
+
+This route will catch an unknown route:
+    <Route render={() => <h1>Not found</h1>} />
+
+----------------------Loading routes lazily:--------------------------
++ Lazy loading: To charge only the code you need 
+
+============================ asyncComponent ==================================
+import React, {Component} from 'react';
+
+const asyncComponent= (importComponent) => {
+    return class extends Component {
+        state = {
+            component: null
+        }
+
+        componentDidMount() {
+            importComponent()
+                .then(cmp => {
+                    this.setState({component: cmp.default});
+                });
+        }
+
+        render () {
+            const C = this.state.component;
+
+            return C ? <C {...props} /> : null;
+        }
+    }
+}
+
+export default asyncComponent;
+---------------------------------(Usage)------------------------
+import asyncComponent from '../../hoc/asyncComponent';
+//import NewPost from '../../containers/Blog/NewPost/NewPost';
+const AsyncNewPost = asyncComponent(() => {
+    return import('../../containers/Blog/NewPost/NewPost');
+});
+<Route path="/new-post"  component={AsyncNewPost} /> 
+
+
+Routing & The Server (Deployment)
+
+213. Order Submission Passing Data Between Pages 04:58
+
+218. Wrap up 
+
+================================= Forms & Form Validation ========================
+
+================================= Redux ==========================================
++ npm install --save redux react-redux
