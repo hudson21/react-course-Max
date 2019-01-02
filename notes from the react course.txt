@@ -225,3 +225,6 @@ Routing & The Server (Deployment)
 
 ================================= Redux ==========================================
 + npm install --save redux react-redux
+
+----------------- Types of State --------------------
++
