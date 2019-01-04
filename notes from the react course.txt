@@ -235,3 +235,11 @@ Routing & The Server (Deployment)
 + If you wanna use redux dev-tools, you have to use compose
 + Redux Thunk --> npm install --save redux-thunk: This library allows us to apply a middleware to
   the actionCreators to have a result of dispatching the actionCreators in an Asynchronous way
+
+
++ Where to put the logic ?
+It is a good practice to handle the logic in the reducers, because according to the theory concepts
+reducers are the ones in charge of handling the data before rendering to the store state
+
+redux.js.org
+ 

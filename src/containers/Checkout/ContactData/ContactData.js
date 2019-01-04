@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Forms/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as actionCreators from '../../../store/actions';
 
 class ContactData extends Component {
     state = {
@@ -102,8 +104,6 @@ class ContactData extends Component {
     orderHandler = (event) => {
         event.preventDefault();
         
-        this.setState({loading:true})
-        
         const formData = {};
         
         for(let formElementIdentifier in this.state.orderForm){
@@ -117,15 +117,8 @@ class ContactData extends Component {
             orderData: formData
         }
 
-        axios.post('/orders.json', order)
-             .then(response =>{
-                 this.setState({ loading:false });
-                 this.props.history.push('/');
-             })
-             .catch(error =>{ 
-                 console.log(error); 
-                 this.setState({ loading:false }); 
-            });
+        this.props.onOrderBurger(order);
+
     }
 
     checkValidation = (value, rules) => {
@@ -244,4 +237,11 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps)(withRouter(ContactData));
+const mapDispatchToProps = (dispatch) => {
+    return{
+        onOrderBurger: (orderData) => dispatch(actionCreators.purchaseBurgerStart(orderData))
+    };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(withRouter(ContactData), axios));
