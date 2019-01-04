@@ -228,3 +228,10 @@ Routing & The Server (Deployment)
 
 ----------------- Types of State --------------------
 +
+
+================================= Redux Advanced =================================
++ Redux DevTools Google Chrome
+
++ If you wanna use redux dev-tools, you have to use compose
++ Redux Thunk --> npm install --save redux-thunk: This library allows us to apply a middleware to
+  the actionCreators to have a result of dispatching the actionCreators in an Asynchronous way
