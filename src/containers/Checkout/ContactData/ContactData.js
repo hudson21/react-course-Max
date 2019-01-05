@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import classes from './ContactData.module.css';
 import axios from '../../../axios-orders';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 //Components
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Forms/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as actionCreators from '../../../store/actions';
 
 class ContactData extends Component {
     state = {
@@ -47,7 +50,8 @@ class ContactData extends Component {
                 validation: {
                     required: true,
                     minLength: 5,
-                    maxLength: 5
+                    maxLength: 5,
+                    isNumeric: true
                 },
                 valid: false,
                 touched: false
@@ -69,11 +73,12 @@ class ContactData extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'Your Email'
+                    placeholder: 'Your E-Mail'
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    isEmail: true
                 },
                 valid: false,
                 touched: false
@@ -99,8 +104,6 @@ class ContactData extends Component {
     orderHandler = (event) => {
         event.preventDefault();
         
-        this.setState({loading:true})
-        
         const formData = {};
         
         for(let formElementIdentifier in this.state.orderForm){
@@ -109,20 +112,13 @@ class ContactData extends Component {
         }
 
         const order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.ings,
             price: this.props.price,
             orderData: formData
         }
 
-        axios.post('/orders.json', order)
-             .then(response =>{
-                 this.setState({ loading:false });
-                 this.props.history.push('/');
-             })
-             .catch(error =>{ 
-                 console.log(error); 
-                 this.setState({ loading:false }); 
-            });
+        this.props.onOrderBurger(order);
+
     }
 
     checkValidation = (value, rules) => {
@@ -145,6 +141,17 @@ class ContactData extends Component {
         if(rules.maxLength) {
             isValid = value.length >= rules.maxLength && isValid;
         }
+
+        if (rules.isEmail) {
+            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+            isValid = pattern.test(value) && isValid
+        }
+
+        if (rules.isNumeric) {
+            const pattern = /^\d+$/;
+            isValid = pattern.test(value) && isValid
+        }
+
         return isValid;
     }
 
@@ -223,4 +230,18 @@ class ContactData extends Component {
     }
 }
 
-export default withRouter(ContactData);
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients,
+        price: state.totalPrice
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        onOrderBurger: (orderData) => dispatch(actionCreators.purchaseBurgerStart(orderData))
+    };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(withRouter(ContactData), axios));
