@@ -9,7 +9,7 @@ import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Forms/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
-import * as actionCreators from '../../../store/actions';
+import * as actions from '../../../store/actions';
 
 class ContactData extends Component {
     state = {
@@ -116,7 +116,7 @@ class ContactData extends Component {
             orderData: formData
         }
 
-        this.props.onOrderBurger(order);
+        this.props.onOrderBurger(order, this.props.token);
 
     }
 
@@ -233,13 +233,14 @@ const mapStateToProps = state => {
     return {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        onOrderBurger: (orderData) => dispatch(actionCreators.purchaseBurger(orderData))
+        onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
     };
 };
 
