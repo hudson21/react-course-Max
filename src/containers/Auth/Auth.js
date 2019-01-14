@@ -8,6 +8,7 @@ import Input from '../../components/UI/Forms/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions';
+import { updateObject, checkValidation } from '../../shared/utility';
 
 class Auth extends Component {
     state = {
@@ -46,54 +47,22 @@ class Auth extends Component {
 
     componentDidMount() {
         if(this.props.buildingBurger && this.props.authRedirectPath !== '/') {
+            //Here we are setting the path to '/' if the path is different to '/'
             this.props.onSetAuthRedirectPath();
         }
     }
 
-    checkValidation = (value, rules) => {
-        let isValid = true;
-
-        //This is for the case we dont have rules in a specific field
-        if(!rules) {
-            return true;
-        }
-        
-        if(rules.required) {
-            //.trim() to remove any space from the values at the beginning and end
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if(rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-
-        if(rules.maxLength) {
-            isValid = value.length >= rules.maxLength && isValid;
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid;
-    }
-
     inputChangedHandler = (event, controlName) => {
-        const updatedControls = {
-            ...this.state.controls, 
-            [controlName]: {
-                ...this.state.controls[controlName],
+        const updatedControls = updateObject(this.state.controls, {
+            [controlName]: updateObject(this.state.controls[controlName], {
                 value: event.target.value,
-                valid: this.checkValidation(event.target.value, this.state.controls[controlName].validation),
+                valid: checkValidation(
+                    event.target.value, 
+                    this.state.controls[controlName].validation),
                 touched: true
-            }
-        };
+            })
+        });
+
         this.setState({controls: updatedControls});
     }
 
