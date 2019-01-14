@@ -9,7 +9,6 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import OderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import * as actions from '../../store/actions';
@@ -20,7 +19,7 @@ class BurgerBuilder extends Component {
         purchasing: false
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.onInitIngredients();
     }
 

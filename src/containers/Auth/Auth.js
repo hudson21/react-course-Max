@@ -46,10 +46,10 @@ class Auth extends Component {
     }
 
     componentDidMount() {
-        if(this.props.buildingBurger && this.props.authRedirectPath !== '/') {
+        if(!this.props.buildingBurger && this.props.authRedirectPath !== '/') {
             //Here we are setting the path to '/' if the path is different to '/'
-            this.props.onSetAuthRedirectPath();
-        }
+            this.props.onSetAuthRedirectPath(this.props.authRedirectPath);
+        }   
     }
 
     inputChangedHandler = (event, controlName) => {

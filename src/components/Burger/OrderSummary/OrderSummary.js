@@ -7,7 +7,7 @@ import Button from '../../UI/Button/Button';
 class OderSummary extends Component{
     //This could be a functional component, it does not have to be a class
     componentWillUpdate(){
-        console.log('componentWillUpdate');
+        //console.log('componentWillUpdate');
     }
 
     render(){
