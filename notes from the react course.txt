@@ -242,4 +242,8 @@ It is a good practice to handle the logic in the reducers, because according to 
 reducers are the ones in charge of handling the data before rendering to the store state
 
 redux.js.org
+
+================================= Testing ===========================================
+npm install --save enzyme react-test-render enzyme-adapter-react-16
+
  
