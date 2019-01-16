@@ -246,4 +246,15 @@ redux.js.org
 ================================= Testing ===========================================
 npm install --save enzyme react-test-render enzyme-adapter-react-16
 
+jest documentation
+enzyme documentation
+
+================================= Deploying React Apps ==============================
+
+Deployment Steps 
+1. Check (& Adjust) Basepath --> <BrowserRouter basename="/my-app/">
+2. Build & Optimize Project --> npm run build in create-react-app project
+3. Server must ALWAYS serve index.html (also for 404 cases) --> To ensure that Routing works correctly
+4. Upload Build Artifacts to (static) Server -->  In /build folder when using create-react-app
+
  
